@@ -1,0 +1,6 @@
+# Ignore /tools
+/tools/**
+
+# Allow Markdown files in subdirectories of /tools
+!/tools/*/
+!/tools/**/*.md
