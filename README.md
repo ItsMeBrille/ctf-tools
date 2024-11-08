@@ -1,10 +1,17 @@
 # CTF Tools
 
+This is a collection of CTF-tools explained with a quick how to commend.
+
+First an honorable mention to some other big collections of tools:
+
+1. [Eric Zimmerman's tools](https://ericzimmerman.github.io/#!index.md)
+1. [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
+
 ## Table of Contents
 
-### Crypto
+## Crypto
 
-#### RsaCtfTool
+### RsaCtfTool
 
 This tool is an utility designed to decrypt data from weak public keys and attempt to recover the corresponding private key. Also this tool offers a comprehensive range of attack options, enabling users to apply various strategies to crack the encryption. The RSA security, at its core, relies on the complexity of the integer factorization problem. This project serves as a valuable resource by combining multiple integer factorization algorithms, effectively enhancing the overall decryption capabilities.
 
@@ -21,18 +28,18 @@ docker run -it --rm -v $PWD:/data rsactftool/rsactftool
 [--decrypt DECRYPT]
 ```
 
-For more about usage see [README.md](Repos/RsaCtfTool/README.md#usage).
+For more about usage see [RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool).
 
 
-### Forensics
+## Forensics
 
-#### Volatility
+### Volatility
 
 Volatility is the world's most widely used framework for extracting digital artifacts from volatile memory (RAM) samples. The extraction techniques are performed completely independent of the system being investigated but offer visibility into the runtime state of the system. The framework is intended to introduce people to the techniques and complexities associated with extracting digital artifacts from volatile memory samples and provide a platform for further work into this exciting area of research.
 
 Links: [Volatility](https://github.com/volatilityfoundation/volatility) / [Volatility 3](https://github.com/volatilityfoundation/volatility3)
 
-How to use Voloatility 3:
+How to use Volatility 3:
 
 ```bash
 docker run -it --rm -v $PWD:/workspace --entrypoint volshell sk4la/volatility3 -f dump.dmp
@@ -55,19 +62,67 @@ Alter the command by appending your wanted plugin:
 
 
 
-### Reversing
+## Reversing
 
 
 
-### PWN
+## PWN
 
 
 
-### OSINT
+## OSINT
 
 
 
-### Miscellaneous
+## Miscellaneous
 
+### bkcrack
 
+You can see a list of entry names and metadata in an archive named `archive.zip` like this:
 
+```bash
+./bkcrack -L archive.zip
+```
+
+Entries using ZipCrypto encryption are vulnerable to a known-plaintext attack.
+
+```
+bkcrack -j 4 -C challenge.zip -c challenge.iso -x 0x8001 4344303031 -x 0x8010 
+202020202020202020202020202020202020202020202020
+```
+
+Remove password after found keys
+
+```bash
+./bkcrack -C secrets.zip -k c4490e28 b414a23d 91404b31 -D secrets_without_password.zip
+```
+
+| **Option** | **Description** |
+|---|---|
+| `-C <archive>`| Zip archive containing the ciphertext entry |
+| `-c <file>` | Zip entry/file containing ciphertext |
+| `-p <file>` | Zip entry/file containing plaintext |
+| `-P <archive>` | Zip archive containing the plaintext entry|
+| `-x <data>` | Additional plaintext in hexadecimal starting at the given offset (may be negative)|
+| `--continue-attack <checkpoint>`| Start point to continue an interrupted attack|
+| `-j <count>`| Number of threads for parallel operations|
+| `-L <archive>`| List entries in a zip archive and exit|
+| `-k <X> <Y> <Z>`| Internal password representation as three 32-bit integers in hexadecimal|
+| `-D <archive>` | Create a copy of zip archive with deciphered entries (removes password protection)|
+| `-r <min>..<max> <charset>` | Create a copy of zip archive with deciphered entries (removes password protection)|
+
+Recover the password:
+
+```bash
+./bkcrack -k 18f285c6 881f2169 b35d661d -r 9..12 ?p
+```
+
+Charsets for bruteforce is as follows:
+
+| **Shortcut** | **Description** |
+|--------------|----------------------------|
+| `?l` | Lowercase letters |
+| `?d` | Decimal digits |
+| `?a` | Alpha-numerical characters |
+| `?p` | Printable ASCII characters |
+| `?b` | Full range (0x00 - 0xff) |
