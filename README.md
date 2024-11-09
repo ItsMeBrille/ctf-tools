@@ -68,10 +68,65 @@ Alter the command by appending your wanted plugin:
 
 ## PWN
 
+### pwntools
+
+Docs: [pwntools.com](https://docs.pwntools.com/)
+
+```bash
+pip install pwntools
+```
+
+Quick buffer overflow example:
+
+```py
+from pwn import *
+
+# process('./binary')
+p = remote(host, port)
+
+offset = 20
+payload = b'A'*offset + p32(0x00000000)
+
+p.sendline(payload)
+
+p.interactive()
+```
 
 
 ## OSINT
 
+### Overpass turbo
+
+Interpreter: https://overpass-turbo.eu/
+
+```c
+area[name="Norge"];
+node(area)[highway=bus_stop];
+node(around:100)[amenity=cinema];
+out;
+```
+
+Another example:
+
+```c
+area[name="Oslo"];
+node(area)[shop=electronics][brand~power, i];
+out;
+```
+
+Docs for [how to use Overpass QL](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL). Here is a list of different keys to use when querying:
+
+| **Key** | **Values** |
+|---------------|----------------------------------------------------------------------------------|
+| [highway](https://wiki.openstreetmap.org/wiki/Key:highway) | motorway, road |
+| [amenity](https://wiki.openstreetmap.org/wiki/Key:amenity) | fountain, hospital, fast_food, restaurant, library |
+| [building](https://wiki.openstreetmap.org/wiki/Key:building)| house, hotel, school, church, bridge |
+| [leisure](https://wiki.openstreetmap.org/wiki/Key:leisure) | park, garden, playground, swimming_pool, pitch, stadium |
+| [shop](https://wiki.openstreetmap.org/wiki/Key:shop)| bakery, supermarket, clothing, electronics, furniture, hairdresser |
+| [waterway](https://wiki.openstreetmap.org/wiki/Key:waterway)| river, waterfall, dock |
+| [railway](https://wiki.openstreetmap.org/wiki/Key:railway) | rail, subway, tram, platform, halt, crossing |
+
+`[out:json];` can be used when using tools like [overpass-api.de](https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Oslo%22];%20node(area)[shop=electronics][brand~power,%20i];%20out;r) to ensure it outputs json.
 
 
 ## Miscellaneous
