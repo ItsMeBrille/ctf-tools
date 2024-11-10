@@ -98,35 +98,90 @@ p.interactive()
 ### Overpass turbo
 
 Interpreter: https://overpass-turbo.eu/
+Docs for [how to use Overpass QL](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL). Here is a list of different keys to use when querying:
+Database for [key value pairs](https://taginfo.openstreetmap.org/search#keys)
+
+Simple usage:
 
 ```c
-area[name="Norge"];
+area["name:en"="Norway"];
 node(area)[highway=bus_stop];
 node(around:100)[amenity=cinema];
 out;
 ```
 
-Another example:
+Useful keys and links to where to find more:
+
+| **Key** | **Way** | **Node** |
+|---------|----------|-----------|
+| [highway](https://wiki.openstreetmap.org/wiki/Key:highway)     | motorway, road, footway, cycleway, pedestrian, service, track | bus_stop |
+| [amenity](https://wiki.openstreetmap.org/wiki/Key:amenity)     | hospital, restaurant, library, school, pharmacy, place_of_worship, cafe, kindergarten, police | fountain, bench, toilet, bank, charging_station, fuel |
+| [leisure](https://wiki.openstreetmap.org/wiki/Key:leisure)     | park, garden, playground, swimming_pool, pitch, stadium, golf_course | — |
+| [shop](https://wiki.openstreetmap.org/wiki/Key:shop)           | — | bakery, supermarket, clothes, electronics, furniture, hairdresser, bookstore, pet, jeweller, music |
+| [railway](https://wiki.openstreetmap.org/wiki/Key:railway)     | rail, subway, tram, tunnel | platform, halt, crossing, station |
+| [building](https://wiki.openstreetmap.org/wiki/Key:building)   | house, apartment, barn, church, school, hospital, office, warehouse, museum, hotel, post_office, cinema, theatre | — |
+| [aeroway](https://wiki.openstreetmap.org/wiki/Key:aeroway)     | runway | helipad |
+| [power](https://wiki.openstreetmap.org/wiki/Key:power)         | line, generator | substation, tower |
+| [barrier](https://wiki.openstreetmap.org/wiki/Key:barrier)     | fence, wall | gate, hedge, bollard |
+| [man_made](https://wiki.openstreetmap.org/wiki/Key:man_made)   | pier, bridge, tower | - |
+| [military](https://wiki.openstreetmap.org/wiki/Key:military)   | camp, base | bunker, checkpoint |
+| [water](https://wiki.openstreetmap.org/wiki/Key:water)         | reservoir, tank | well, spring |
+
+Here are some useful settings elements:
+
+| **Element**                        | **Description**                                                                   |
+|------------------------------------|-----------------------------------------------------------------------------------|
+| `[out:json];`                      | Specifies the result format as JSON (alternatives: `out:xml`, `out:csv`).         |
+| `timeout`                          | Sets the query timeout in seconds (e.g., `[timeout:30];` for 30 seconds).         |
+| `{{bbox}}`                         | Represents the current bounding box, limiting the query to the visible area.      |
+| `(.result;.result >;) -> .result;` | Expands results to include related elements, like showing ways as nodes.          |
+| `,i`                               | Makes tag matching case-insensitive.                                              |
+| `~`                                | Matches a tag value containing a specified pattern.                               |
+| Settings for Output                | Controls how much data is returned, e.g., `out body`, `out skel`, or `out count`. |
+
+
+#### Advanced examples
 
 ```c
-area[name="Oslo"];
-node(area)[shop=electronics][brand~power, i];
-out;
+area["name"="Oslo"]->.a;
+node(area.a)[shop=electronics][brand~"power", i]->.result;
 ```
 
-Docs for [how to use Overpass QL](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL). Here is a list of different keys to use when querying:
+```c
+// Area
+area[name="Oslo"]->.a;
 
-| **Key** | **Values** |
-|---------------|----------------------------------------------------------------------------------|
-| [highway](https://wiki.openstreetmap.org/wiki/Key:highway) | motorway, road |
-| [amenity](https://wiki.openstreetmap.org/wiki/Key:amenity) | fountain, hospital, fast_food, restaurant, library |
-| [building](https://wiki.openstreetmap.org/wiki/Key:building)| house, hotel, school, church, bridge |
-| [leisure](https://wiki.openstreetmap.org/wiki/Key:leisure) | park, garden, playground, swimming_pool, pitch, stadium |
-| [shop](https://wiki.openstreetmap.org/wiki/Key:shop)| bakery, supermarket, clothing, electronics, furniture, hairdresser |
-| [waterway](https://wiki.openstreetmap.org/wiki/Key:waterway)| river, waterfall, dock |
-| [railway](https://wiki.openstreetmap.org/wiki/Key:railway) | rail, subway, tram, platform, halt, crossing |
+// Secondary Schools
+way(area.a)[amenity=school][grades~"8-10|1-10"]->.schools;
 
-`[out:json];` can be used when using tools like [overpass-api.de](https://overpass-api.de/api/interpreter?data=[out:json];area[name=%22Oslo%22];%20node(area)[shop=electronics][brand~power,%20i];%20out;r) to ensure it outputs json.
+// Count schools
+.schools out count;
+
+// Display schools
+(.schools;.schools >;) -> .display;
+.display out;
+```
+
+```c
+[out:json]; 
+
+// Area
+(
+	area["name"="Oslo"];
+	area["name"="Bærum"];
+)->.a;
+
+// Bus stops
+node(area.a)[highway=bus_stop]->.bus_stops;
+
+// Elkjøp (not phonehouse) close to bus stops
+(
+    node(around.bus_stops: 1000)[shop][name~"elkjøp", i];
+  - node(area.a)[shop][name~"phone", i];
+)->.result;
+
+.result out;
+```
 
 
 ## Miscellaneous
