@@ -236,3 +236,23 @@ Charsets for bruteforce is as follows:
 | `?a` | Alpha-numerical characters |
 | `?p` | Printable ASCII characters |
 | `?b` | Full range (0x00 - 0xff) |
+
+
+
+# Penetration testing
+
+## Nmap
+
+Nmap is a free network scanning tool used to discover hosts and services on a network by analyzing responses to various packets and requests.
+
+Installation:
+```bash
+sudo apt-get install nmap
+```
+
+Usage:
+```bash
+nmap [<Scan Type>] [<Options>] <target specification>
+```
+
+[Cheat Sheet](https://www.geeksforgeeks.org/nmap-cheat-sheet/)
