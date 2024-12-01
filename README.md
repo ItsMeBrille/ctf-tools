@@ -7,9 +7,26 @@ First an honorable mention to some other big collections of tools:
 1. [Eric Zimmerman's tools](https://ericzimmerman.github.io/#!index.md)
 1. [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
 
+
+
 ## Table of Contents
 
 ## Crypto
+
+### dCode.fr
+
+[Cipher identifier](https://www.dcode.fr/cipher-identifier)
+[Hash identifier](https://www.dcode.fr/hash-identifier)
+
+
+
+### CrackStation
+
+Find hashed passwords using a rainbowtable attack.
+
+[crackstation.net](https://crackstation.net/)
+
+
 
 ### RsaCtfTool
 
@@ -29,6 +46,7 @@ docker run -it --rm -v $PWD:/data rsactftool/rsactftool
 ```
 
 For more about usage see [RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool).
+
 
 
 ## Forensics
@@ -184,6 +202,7 @@ node(area.a)[highway=bus_stop]->.bus_stops;
 ```
 
 
+
 ## Miscellaneous
 
 ### bkcrack
@@ -256,3 +275,22 @@ nmap [<Scan Type>] [<Options>] <target specification>
 ```
 
 [Cheat Sheet](https://www.geeksforgeeks.org/nmap-cheat-sheet/)
+
+
+
+# Web
+
+## Gobuster
+
+Gobuster is a tool for directory and file brute-forcing on web servers. It can discover hidden resources on a web server by guessing directories, files, or DNS subdomains.
+
+```bash
+docker run --rm -v $(pwd):/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/<wordlist>
+```
+
+| `Short Name` | `Description` | `Example Command` |
+|---|---|---|
+| `dir`     | Brute-forces directories and files on a web server using a wordlist to discover hidden resources like `/admin`, `/backup`, etc. | `dir -u www.example.com -w /mnt/<wordlist>` |
+| `dns`     | Brute-forces subdomains of a given domain using a wordlist to find hidden or undocumented subdomains (e.g., `test.example.com`). | `dns -d example.com -w /mnt/<subdomain_wordlist>` |
+| `vhost`   | Brute-forces virtual hosts (vhosts) to discover different websites hosted on the same server by using different hostnames. | `vhost -u www.example.com -w /mnt/<vhost_wordlist>` |
+| `s3`      | Scans for publicly accessible AWS S3 buckets by brute-forcing bucket names. | `s3 -b -w /mnt/<bucket_wordlist>` |
