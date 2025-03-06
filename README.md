@@ -280,6 +280,18 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 # Web
 
+## Webhook
+
+[Webhook.site](https://webhook.site/) is a tool for receiving HTTP requests. It provides a unique URL to capture and inspect incoming requests, including headers, payloads, and metadata.
+
+
+1. Generate a unique URL at [Webhook.site](https://webhook.site/).
+1. Send a request using your tool or application:
+   ```bash
+   curl -X POST -d "param=value" https://webhook.site/<unique_id>
+   ```
+
+
 ## Gobuster
 
 Gobuster is a tool for directory and file brute-forcing on web servers. It can discover hidden resources on a web server by guessing directories, files, or DNS subdomains.
