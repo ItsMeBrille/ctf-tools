@@ -285,8 +285,10 @@ nmap [<Scan Type>] [<Options>] <target specification>
 Gobuster is a tool for directory and file brute-forcing on web servers. It can discover hidden resources on a web server by guessing directories, files, or DNS subdomains.
 
 ```bash
-docker run --rm -v $(pwd):/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/<wordlist>
+docker run --rm -v $(pwd):/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/common.txt
 ```
+
+A common wordlist to use with Gobuster is [common.txt](Scripts/common.txt). To use it with the example above, download the file and run the command in the same dir.
 
 | `Short Name` | `Description` | `Example Command` |
 |---|---|---|
