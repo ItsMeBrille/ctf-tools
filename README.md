@@ -305,6 +305,7 @@ A common wordlist to use with Gobuster is [common.txt](Scripts/common.txt). To u
 | `Short Name` | `Description` | `Example Command` |
 |---|---|---|
 | `dir`     | Brute-forces directories and files on a web server using a wordlist to discover hidden resources like `/admin`, `/backup`, etc. | `dir -u www.example.com -w /mnt/<wordlist>` |
+| `fuzz`     | Brute-forces custom fuzzing points in URLs using a wordlist to discover hidden parameters or endpoints. | `fuzz -u www.example.com/FUZZ -w /mnt/<wordlist>` |
 | `dns`     | Brute-forces subdomains of a given domain using a wordlist to find hidden or undocumented subdomains (e.g., `test.example.com`). | `dns -d example.com -w /mnt/<subdomain_wordlist>` |
 | `vhost`   | Brute-forces virtual hosts (vhosts) to discover different websites hosted on the same server by using different hostnames. | `vhost -u www.example.com -w /mnt/<vhost_wordlist>` |
 | `s3`      | Scans for publicly accessible AWS S3 buckets by brute-forcing bucket names. | `s3 -b -w /mnt/<bucket_wordlist>` |
