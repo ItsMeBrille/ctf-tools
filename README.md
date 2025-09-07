@@ -278,13 +278,29 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 
 
-# Web
+## Web
 
-## tshark
+### Linux tools
+
+```bash
+ip addr add 192.168.1.1/24 dev eth0
+```
+
+### tshark
+
+#### Installation:
+
+```bash
+apt install tshark
+```
+
+#### Usage:
 
 ```bash
 tshark -f "port 31337" -w capture.pcap
 ```
+
+Follow tcp stream:
 
 ```bash
 tshark -r capture.pcap -qz follow,tcp,ascii,0
@@ -297,7 +313,7 @@ tshark -r capture.pcap -Y 'frame contains "flag"' -V
 ```
 
 
-## Webhook
+### Webhook
 
 [Webhook.site](https://webhook.site/) is a tool for receiving HTTP requests. It provides a unique URL to capture and inspect incoming requests, including headers, payloads, and metadata.
 
@@ -309,7 +325,7 @@ tshark -r capture.pcap -Y 'frame contains "flag"' -V
    ```
 
 
-## Gobuster
+### Gobuster
 
 Gobuster is a tool for directory and file brute-forcing on web servers. It can discover hidden resources on a web server by guessing directories, files, or DNS subdomains.
 
