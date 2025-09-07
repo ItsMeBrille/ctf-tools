@@ -280,6 +280,23 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 # Web
 
+## tshark
+
+```bash
+tshark -f "port 31337" -w capture.pcap
+```
+
+```bash
+tshark -r capture.pcap -qz follow,tcp,ascii,0
+```
+
+You can use filters in the commandline just like in the app using the `-Y`:
+
+```bash
+tshark -r capture.pcap -Y 'frame contains "flag"' -V
+```
+
+
 ## Webhook
 
 [Webhook.site](https://webhook.site/) is a tool for receiving HTTP requests. It provides a unique URL to capture and inspect incoming requests, including headers, payloads, and metadata.
