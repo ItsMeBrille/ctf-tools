@@ -280,6 +280,14 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 ## Web
 
+### Cewler
+
+Scrape wordlist from web page:
+
+```bash
+docker run --rm -v "$(pwd)":/w ghcr.io/itsmebrille/cewler:latest --output /w/words.txt https://blog.roysolberg.com
+```
+
 ### Linux tools
 
 ```bash
