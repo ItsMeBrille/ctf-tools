@@ -22,7 +22,7 @@ First an honorable mention to some other big collections of tools:
 
 ### CrackStation
 
-Find hashed passwords using a rainbowtable attack.
+Find hashed passwords using a rainbow table attack.
 
 [crackstation.net](https://crackstation.net/)
 
@@ -30,7 +30,7 @@ Find hashed passwords using a rainbowtable attack.
 
 ### RsaCtfTool
 
-This tool is an utility designed to decrypt data from weak public keys and attempt to recover the corresponding private key. Also this tool offers a comprehensive range of attack options, enabling users to apply various strategies to crack the encryption. The RSA security, at its core, relies on the complexity of the integer factorization problem. This project serves as a valuable resource by combining multiple integer factorization algorithms, effectively enhancing the overall decryption capabilities.
+This tool is a utility designed to decrypt data from weak public keys and attempt to recover the corresponding private key. Also, this tool offers a comprehensive range of attack options, enabling users to apply various strategies to crack the encryption. The RSA security, at its core, relies on the complexity of the integer factorization problem. This project serves as a valuable resource by combining multiple integer factorization algorithms, effectively enhancing the overall decryption capabilities.
 
 ```bash
 docker run -it --rm -v $PWD:/data rsactftool/rsactftool
@@ -53,7 +53,7 @@ For more about usage see [RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool).
 
 ### Volatility
 
-Volatility is the world's most widely used framework for extracting digital artifacts from volatile memory (RAM) samples. The extraction techniques are performed completely independent of the system being investigated but offer visibility into the runtime state of the system. The framework is intended to introduce people to the techniques and complexities associated with extracting digital artifacts from volatile memory samples and provide a platform for further work into this exciting area of research.
+Volatility is the world's most widely used framework for extracting digital artifacts from volatile memory (RAM) samples. The extraction techniques are performed completely independent of the system being investigated, but offer visibility into the runtime state of the system. The framework is intended to introduce people to the techniques and complexities associated with extracting digital artifacts from volatile memory samples and provide a platform for further work into this exciting area of research.
 
 Links: [Volatility](https://github.com/volatilityfoundation/volatility) / [Volatility 3](https://github.com/volatilityfoundation/volatility3)
 
@@ -275,6 +275,9 @@ hashcat -a 0 hash.txt rockyou.txt
 - `-a 7` — **Hybrid (mask + wordlist)**. Mask + wordlist entry.
 
 Crack hash with wordlist (-m sets hash type)
+
+hashcat list: https://hashcat.net/wiki/doku.php?id=example_hashes
+
 ```bash
 hashcat -m 0 -a 0 hash.txt rockyou.txt
 ```
