@@ -203,9 +203,9 @@ node(area.a)[highway=bus_stop]->.bus_stops;
 
 
 
-## Miscellaneous
+## Crack
 
-### bkcrack
+#### bkcrack
 
 You can see a list of entry names and metadata in an archive named `archive.zip` like this:
 
@@ -220,7 +220,7 @@ bkcrack -j 4 -C challenge.zip -c challenge.iso -x 0x8001 4344303031 -x 0x8010
 202020202020202020202020202020202020202020202020
 ```
 
-Remove password after found keys
+Remove the password after finding the keys
 
 ```bash
 ./bkcrack -C secrets.zip -k c4490e28 b414a23d 91404b31 -D secrets_without_password.zip
@@ -246,7 +246,7 @@ Recover the password:
 ./bkcrack -k 18f285c6 881f2169 b35d661d -r 9..12 ?p
 ```
 
-Charsets for bruteforce is as follows:
+Charsets for bruteforce are as follows:
 
 | **Shortcut** | **Description** |
 |--------------|----------------------------|
@@ -258,9 +258,35 @@ Charsets for bruteforce is as follows:
 
 
 
-# Penetration testing
+### Hashcat
 
-## Nmap
+Try to identify the hash:
+
+```bash
+hashcat -a 0 hash.txt rockyou.txt
+```
+
+#### Set `-m` to crack a specific hash type.
+
+- `-a 0` — **Straight / Dictionary**. Try words from a wordlist (can use rules).
+- `-a 1` — **Combination**. Concatenate words from two wordlists.
+- `-a 3` — **Brute-force / Mask**. Try all combinations from charset masks.
+- `-a 6` — **Hybrid (wordlist + mask)**. Wordlist entry + mask.
+- `-a 7` — **Hybrid (mask + wordlist)**. Mask + wordlist entry.
+
+Crack hash with wordlist (-m sets hash type)
+```bash
+hashcat -m 0 -a 0 hash.txt rockyou.txt
+```
+
+Brute force a specific pattern:
+```bash
+hashcat -m 0 -a 3 hash.txt ?u?u?d?d?d?d?d
+```
+
+## Penetration testing
+
+### Nmap
 
 Nmap is a free network scanning tool used to discover hosts and services on a network by analyzing responses to various packets and requests.
 
@@ -279,14 +305,6 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 
 ## Web
-
-### Cewler
-
-Scrape wordlist from web page:
-
-```bash
-docker run --rm -v "$(pwd)":/w ghcr.io/itsmebrille/cewler:latest --output /w/words.txt https://blog.roysolberg.com
-```
 
 ### Linux tools
 
