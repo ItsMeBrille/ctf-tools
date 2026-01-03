@@ -1,6 +1,14 @@
-# Ignore /tools
-/tools/**
+# Dependencies
+node_modules/
+venv/
+env/
+__pycache__/
+*.pyc
 
-# Allow Markdown files in subdirectories of /tools
-!/tools/*/
-!/tools/**/*.md
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
