@@ -1,15 +1,26 @@
 # CTF Tools
 
-This is a collection of CTF-tools explained with a quick how to commend.
-
-First an honorable mention to some other big collections of tools:
-
-1. [Eric Zimmerman's tools](https://ericzimmerman.github.io/#!index.md)
-1. [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings)
-
+This is a collection of CTF-tools explained with quick how-to commands.
 
 
 ## Table of Contents
+
+## Quick Linux tools
+
+### Change IP
+
+```bash
+ip addr add 192.168.1.1/24 dev eth0
+```
+
+
+### Quick SSH file copy
+
+```bash
+echo "tar cvfz - ." | ssh server > loot.tgz 
+tar -xvzf loot.tgz
+```
+
 
 ## Crypto
 
@@ -17,15 +28,6 @@ First an honorable mention to some other big collections of tools:
 
 [Cipher identifier](https://www.dcode.fr/cipher-identifier)
 [Hash identifier](https://www.dcode.fr/hash-identifier)
-
-
-
-### CrackStation
-
-Find hashed passwords using a rainbow table attack.
-
-[crackstation.net](https://crackstation.net/)
-
 
 
 ### RsaCtfTool
@@ -49,7 +51,120 @@ For more about usage see [RsaCtfTool](https://github.com/RsaCtfTool/RsaCtfTool).
 
 
 
+## Cracking
+
+### CrackStation
+
+Find hashed passwords using a rainbow table attack.
+
+[crackstation.net](https://crackstation.net/)
+
+
+### Hashcat
+
+Try to identify the hash:
+
+```bash
+hashcat -a 0 hash.txt rockyou.txt
+```
+
+#### Set `-m` to crack a specific hash type.
+
+- `-a 0` — **Straight / Dictionary**. Try words from a wordlist (can use rules).
+- `-a 1` — **Combination**. Concatenate words from two wordlists.
+- `-a 3` — **Brute-force / Mask**. Try all combinations from charset masks.
+- `-a 6` — **Hybrid (wordlist + mask)**. Wordlist entry + mask.
+- `-a 7` — **Hybrid (mask + wordlist)**. Mask + wordlist entry.
+
+Crack hash with wordlist (-m sets hash type)
+
+hashcat list: https://hashcat.net/wiki/doku.php?id=example_hashes
+
+```bash
+hashcat -m 0 -a 0 hash.txt rockyou.txt
+```
+
+Brute force a specific pattern:
+```bash
+hashcat -m 0 -a 3 hash.txt ?u?u?d?d?d?d?d
+```
+
+
+### CeWLeR
+
+[roys/cewler](https://github.com/roys/cewler) is a program used to generate a wordlist from a url.
+
+```bash
+docker run --rm -v "$(pwd)":/w ghcr.io/ItsMeBrille/cewler:latest --output /w/wordlist.txt https://example.com
+```
+
+
+### bkcrack
+
+You can see a list of entry names and metadata in an archive named `archive.zip` like this:
+
+```bash
+./bkcrack -L archive.zip
+```
+
+Entries using ZipCrypto encryption are vulnerable to a known-plaintext attack.
+
+```
+bkcrack -j 4 -C challenge.zip -c challenge.iso -x 0x8001 4344303031 -x 0x8010 
+202020202020202020202020202020202020202020202020
+```
+
+Remove the password after finding the keys
+
+```bash
+./bkcrack -C secrets.zip -k c4490e28 b414a23d 91404b31 -D secrets_without_password.zip
+```
+
+| **Option** | **Description** |
+|---|---|
+| `-C <archive>`| Zip archive containing the ciphertext entry |
+| `-c <file>` | Zip entry/file containing ciphertext |
+| `-p <file>` | Zip entry/file containing plaintext |
+| `-P <archive>` | Zip archive containing the plaintext entry|
+| `-x <data>` | Additional plaintext in hexadecimal starting at the given offset (may be negative)|
+| `--continue-attack <checkpoint>`| Start point to continue an interrupted attack|
+| `-j <count>`| Number of threads for parallel operations|
+| `-L <archive>`| List entries in a zip archive and exit|
+| `-k <X> <Y> <Z>`| Internal password representation as three 32-bit integers in hexadecimal|
+| `-D <archive>` | Create a copy of zip archive with deciphered entries (removes password protection)|
+| `-r <min>..<max> <charset>` | Create a copy of zip archive with deciphered entries (removes password protection)|
+
+Recover the password:
+
+```bash
+./bkcrack -k 18f285c6 881f2169 b35d661d -r 9..12 ?p
+```
+
+Charsets for bruteforce are as follows:
+
+| **Shortcut** | **Description** |
+|--------------|----------------------------|
+| `?l` | Lowercase letters |
+| `?d` | Decimal digits |
+| `?a` | Alpha-numerical characters |
+| `?p` | Printable ASCII characters |
+| `?b` | Full range (0x00 - 0xff) |
+
+
+
 ## Forensics
+
+### Eric Zimmerman's tools
+
+[Eric Zimmerman's tools](https://ericzimmerman.github.io/#!index.md)
+
+| Name               | Purpose |
+|--------------------|---------|
+| [Timeline Explorer](https://download.ericzimmermanstools.com/net9/TimelineExplorer.zip) | View CSV and Excel files, filter, group, sort, etc. with ease |
+| [Registry Explorer](https://download.ericzimmermanstools.com/net9/RegistryExplorer.zip) | Registry viewer with searching, multi-hive support, plugins, and more. Handles locked files |
+| [EvtxECmd](https://download.ericzimmermanstools.com/net9/EvtxECmd.zip)                  | Event log (evtx) parser with standardized CSV, XML, and JSON output; supports locked files |
+| [RECmd](https://download.ericzimmermanstools.com/net9/RECmd.zip)                        | Powerful command line Registry tool with searching, multi-hive support, plugins |
+
 
 ### Volatility
 
@@ -65,18 +180,18 @@ docker run -it --rm -v $PWD:/workspace --entrypoint volshell sk4la/volatility3 -
 
 Alter the command by appending your wanted plugin:
 
-| **Plugin** | **Description** | **Command-Line Example** |
+| **Plugin**   | **Description** | **Command-Line Example** |
 | --- | --- | --- |
-| **pslist** | Lists active processes by scanning memory for process structures, providing PID, name, and more. | `windows.pslist` |
-| **pstree** | Displays processes in a tree format, showing parent-child relationships for easier analysis of process hierarchies. | `windows.pstree` |
-| **dlllist** | Lists loaded DLLs for each process, useful for identifying injected DLLs or unusual libraries. | `windows.dlllist --pid <PID>` |
-| **handles** | Shows open handles for each process, which can include files, registry keys, or other objects. | `windows.handles --pid <PID>` |
-| **malfind** | Detects potentially malicious code injections and executable memory regions, highlighting suspicious activity. | `windows.malfind --pid <PID>` |
-| **cmdline** | Extracts the command-line arguments for each process, useful for identifying suspicious process launches. | `windows.cmdline --pid <PID>` |
-| **netscan** | Lists network connections and listening ports, providing insights into active or terminated network connections.| `windows.netscan` |
-| **ssdt** | Displays the System Service Descriptor Table (SSDT), helping identify system call hooking by rootkits. | `windows.ssdt` |
-| **filescan** | Scans for file objects in memory, useful for recovering files or identifying deleted/malicious files. | `windows.filescan` |
-| **registry** | Extracts registry hives from memory, allowing the recovery of critical system and user information. | `windows.registry` |
+| **pslist**   | Lists active processes by scanning memory for process structures, providing PID, name, and more.               | `windows.pslist` |
+| **pstree**   | Displays processes in a tree format, showing parent-child relationships.                                       | `windows.pstree` |
+| **dlllist**  | Lists loaded DLLs for each process, useful for identifying injected DLLs or unusual libraries.                 | `windows.dlllist --pid <PID>` |
+| **handles**  | Shows open handles for each process, which can include files, registry keys, or other objects.                 | `windows.handles --pid <PID>` |
+| **malfind**  | Detects potentially malicious code injections and executable memory regions, highlighting suspicious activity. | `windows.malfind --pid <PID>` |
+| **cmdline**  | Extracts the command-line arguments for each process, useful for identifying suspicious process launches.      | `windows.cmdline --pid <PID>` |
+| **netscan**  | Lists network connections and listening ports, providing insights to active or terminated network connections. | `windows.netscan` |
+| **ssdt**     | Displays the System Service Descriptor Table (SSDT), helping identify system call hooking by rootkits.         | `windows.ssdt` |
+| **filescan** | Scans for file objects in memory, useful for recovering files or identifying deleted/malicious files.          | `windows.filescan` |
+| **registry** | Extracts registry hives from memory, allowing the recovery of critical system and user information.            | `windows.registry` |
 
 
 
@@ -111,6 +226,7 @@ p.interactive()
 ```
 
 
+
 ## OSINT
 
 ### Overpass turbo
@@ -140,7 +256,6 @@ Useful keys and links to where to find more:
 | [building](https://wiki.openstreetmap.org/wiki/Key:building)   | house, apartment, barn, church, school, hospital, office, warehouse, museum, hotel, post_office, cinema, theatre | — |
 | [aeroway](https://wiki.openstreetmap.org/wiki/Key:aeroway)     | runway | helipad |
 | [power](https://wiki.openstreetmap.org/wiki/Key:power)         | line, generator | substation, tower |
-| [barrier](https://wiki.openstreetmap.org/wiki/Key:barrier)     | fence, wall | gate, hedge, bollard |
 | [man_made](https://wiki.openstreetmap.org/wiki/Key:man_made)   | pier, bridge, tower | - |
 | [military](https://wiki.openstreetmap.org/wiki/Key:military)   | camp, base | bunker, checkpoint |
 | [water](https://wiki.openstreetmap.org/wiki/Key:water)         | reservoir, tank | well, spring |
@@ -203,90 +318,6 @@ node(area.a)[highway=bus_stop]->.bus_stops;
 
 
 
-## Crack
-
-#### bkcrack
-
-You can see a list of entry names and metadata in an archive named `archive.zip` like this:
-
-```bash
-./bkcrack -L archive.zip
-```
-
-Entries using ZipCrypto encryption are vulnerable to a known-plaintext attack.
-
-```
-bkcrack -j 4 -C challenge.zip -c challenge.iso -x 0x8001 4344303031 -x 0x8010 
-202020202020202020202020202020202020202020202020
-```
-
-Remove the password after finding the keys
-
-```bash
-./bkcrack -C secrets.zip -k c4490e28 b414a23d 91404b31 -D secrets_without_password.zip
-```
-
-| **Option** | **Description** |
-|---|---|
-| `-C <archive>`| Zip archive containing the ciphertext entry |
-| `-c <file>` | Zip entry/file containing ciphertext |
-| `-p <file>` | Zip entry/file containing plaintext |
-| `-P <archive>` | Zip archive containing the plaintext entry|
-| `-x <data>` | Additional plaintext in hexadecimal starting at the given offset (may be negative)|
-| `--continue-attack <checkpoint>`| Start point to continue an interrupted attack|
-| `-j <count>`| Number of threads for parallel operations|
-| `-L <archive>`| List entries in a zip archive and exit|
-| `-k <X> <Y> <Z>`| Internal password representation as three 32-bit integers in hexadecimal|
-| `-D <archive>` | Create a copy of zip archive with deciphered entries (removes password protection)|
-| `-r <min>..<max> <charset>` | Create a copy of zip archive with deciphered entries (removes password protection)|
-
-Recover the password:
-
-```bash
-./bkcrack -k 18f285c6 881f2169 b35d661d -r 9..12 ?p
-```
-
-Charsets for bruteforce are as follows:
-
-| **Shortcut** | **Description** |
-|--------------|----------------------------|
-| `?l` | Lowercase letters |
-| `?d` | Decimal digits |
-| `?a` | Alpha-numerical characters |
-| `?p` | Printable ASCII characters |
-| `?b` | Full range (0x00 - 0xff) |
-
-
-
-### Hashcat
-
-Try to identify the hash:
-
-```bash
-hashcat -a 0 hash.txt rockyou.txt
-```
-
-#### Set `-m` to crack a specific hash type.
-
-- `-a 0` — **Straight / Dictionary**. Try words from a wordlist (can use rules).
-- `-a 1` — **Combination**. Concatenate words from two wordlists.
-- `-a 3` — **Brute-force / Mask**. Try all combinations from charset masks.
-- `-a 6` — **Hybrid (wordlist + mask)**. Wordlist entry + mask.
-- `-a 7` — **Hybrid (mask + wordlist)**. Mask + wordlist entry.
-
-Crack hash with wordlist (-m sets hash type)
-
-hashcat list: https://hashcat.net/wiki/doku.php?id=example_hashes
-
-```bash
-hashcat -m 0 -a 0 hash.txt rockyou.txt
-```
-
-Brute force a specific pattern:
-```bash
-hashcat -m 0 -a 3 hash.txt ?u?u?d?d?d?d?d
-```
-
 ## Penetration testing
 
 ### Nmap
@@ -309,11 +340,10 @@ nmap [<Scan Type>] [<Options>] <target specification>
 
 ## Web
 
-### Linux tools
+### PayloadsAllTheThings
 
-```bash
-ip addr add 192.168.1.1/24 dev eth0
-```
+[PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings) is a big collection of payloads for injections like XSS, SQLi and template injections.
+
 
 ### tshark
 
@@ -357,6 +387,8 @@ tshark -r capture.pcap -Y 'frame contains "flag"' -V
 ### Gobuster
 
 Gobuster is a tool for directory and file brute-forcing on web servers. It can discover hidden resources on a web server by guessing directories, files, or DNS subdomains.
+
+It is often used together with [CeWLeR](#cewler)
 
 ```bash
 docker run --rm -v $(pwd):/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/common.txt
