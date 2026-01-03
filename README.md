@@ -35,7 +35,7 @@ tar -xvzf loot.tgz
 This tool is a utility designed to decrypt data from weak public keys and attempt to recover the corresponding private key. Also, this tool offers a comprehensive range of attack options, enabling users to apply various strategies to crack the encryption. The RSA security, at its core, relies on the complexity of the integer factorization problem. This project serves as a valuable resource by combining multiple integer factorization algorithms, effectively enhancing the overall decryption capabilities.
 
 ```bash
-docker run -it --rm -v $PWD:/data rsactftool/rsactftool
+docker run -it --rm -v "$PWD":/data rsactftool/rsactftool
 [-h]
 [--publickey PUBLICKEY]
 [--output OUTPUT]
@@ -95,7 +95,7 @@ hashcat -m 0 -a 3 hash.txt ?u?u?d?d?d?d?d
 [roys/cewler](https://github.com/roys/cewler) is a program used to generate a wordlist from a url.
 
 ```bash
-docker run --rm -v "$(pwd)":/w ghcr.io/ItsMeBrille/cewler:latest --output /w/wordlist.txt https://example.com
+docker run --rm -v "$PWD":/w ghcr.io/ItsMeBrille/cewler:latest --output /w/wordlist.txt https://example.com
 ```
 
 
@@ -175,7 +175,7 @@ Links: [Volatility](https://github.com/volatilityfoundation/volatility) / [Volat
 How to use Volatility 3:
 
 ```bash
-docker run -it --rm -v $PWD:/workspace --entrypoint volshell sk4la/volatility3 -f dump.dmp
+docker run -it --rm -v "$PWD":/workspace sk4la/volatility3 -f dump.dmp windows.pslist
 ```
 
 Alter the command by appending your wanted plugin:
@@ -391,7 +391,7 @@ Gobuster is a tool for directory and file brute-forcing on web servers. It can d
 It is often used together with [CeWLeR](#cewler)
 
 ```bash
-docker run --rm -v $(pwd):/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/common.txt
+docker run --rm -v "$PWD":/mnt ghcr.io/oj/gobuster:latest dir -u www.example.com -w /mnt/common.txt
 ```
 
 A common wordlist to use with Gobuster is [common.txt](Scripts/common.txt). To use it with the example above, download the file and run the command in the same dir.
