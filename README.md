@@ -21,6 +21,11 @@ echo "tar cvfz - ." | ssh server > loot.tgz
 tar -xvzf loot.tgz
 ```
 
+### Fix GitHub remote origin SSH auth
+
+```bash
+git remote set-url origin $(git remote get-url origin | sed -E 's#https://github.com/#git@github.com:#')
+```
 
 ## Crypto
 
